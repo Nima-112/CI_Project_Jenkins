@@ -66,7 +66,7 @@ pipeline {
                 // 1. Publication sur Nexus (Correction des antislashs ^ pour le multiligne Windows)
                 bat '''
                     curl -v ^
-                    -u admin:VOTRE_MOT_DE_PASSE ^
+                    -u admin:credentials('nexus-admin-pass') ^
                     --upload-file Release.zip ^
                     http://localhost:8081/repository/python-release/Release.zip
                 '''
