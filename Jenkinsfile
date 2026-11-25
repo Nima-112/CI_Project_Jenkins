@@ -1,6 +1,12 @@
 pipeline {
     agent any
     
+    environment {
+        // On ajoute le dossier Python au PATH pour tout le pipeline
+        // Note : on utilise des doubles antislashs \\ pour échapper en Groovy
+        PATH = "C:\\Users\\lenov\\AppData\\Local\\Programs\\Python\\Python314;${env.PATH}"
+    }
+    
     stages {
         stage('Nettoyage Workspace') {
             steps {
@@ -10,13 +16,13 @@ pipeline {
         
         stage('Clonage') {
             steps {
-                // Remplacez par l'URL de VOTRE dépôt GitHub
                 git branch: 'main', url: 'https://github.com/Nima-112/CI_Project_Jenkins.git'
             }
         }
         
         stage('Vérification Python') {
             steps {
+                // Maintenant "python" fonctionne car il est dans le PATH
                 bat 'python --version'
                 bat 'python -m pip --version'
             }
@@ -57,12 +63,17 @@ pipeline {
         
         stage('Publication de l artefact') {
             steps {
+                // 1. Publication sur Nexus (Correction des antislashs ^ pour le multiligne Windows)
                 bat '''
                     curl -v ^
                     -u admin:VOTRE_MOT_DE_PASSE ^
                     --upload-file Release.zip ^
                     http://localhost:8081/repository/python-release/Release.zip
                 '''
+                
+                // 2. NOUVEAU : Publication de l'artefact directement dans l'interface Jenkins
+                // Cela permet de télécharger le fichier zip depuis la page du build
+                archiveArtifacts artifacts: 'Release.zip', fingerprint: true
             }
         }
     }
