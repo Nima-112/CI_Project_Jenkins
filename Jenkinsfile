@@ -11,7 +11,7 @@ pipeline {
         stage('Clonage') {
             steps {
                 // Remplacez par l'URL de VOTRE dépôt GitHub
-                git branch: 'main', url: 'https://github.com/VotreNomUtilisateur/CI_Project.git'
+                git branch: 'main', url: 'https://github.com/Nima-112/CI_Project_Jenkins.git'
             }
         }
         
